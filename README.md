@@ -1,2 +1,129 @@
-# artifact-versioning
-Gradle plugin for semantic versioning
+# Simple Project versioning
+
+
+### Setup
+
+**Plugin configuration:**
+
+build.gradle.kts
+
+Minimum configuration:
+```kotlin
+versionConfig {
+    versionIncrementer = "minor"
+    tagSuffix = "RELEASE"
+}
+```
+
+Full configuration:
+```kotlin
+versionConfig {
+    versionIncrementer = "minor"
+    tagSuffix = "RELEASE"
+    initialVersion = "1.0.0"
+    applyVersion = true
+}
+```
+If the property `applyVersion` is set to `false`, you might need to set 
+the project version manually by retrieving generated version and 
+applying to gradle version
+
+```kotlin
+val scm by tasks.registering(ScmVersion::class)
+
+version = scm.get().nextVersion
+```
+
+or just:
+
+```kotlin
+version = file("build/versioning/next.txt").readText()
+```
+
+#### Configuration Variables
+
+**versionIncrementer**
+
+- Required: no
+- Default: patch
+- Values: [patch | minor | major]
+- Description: Tells the plugin how the semantic version should be updated.
+
+**tagSuffix**
+
+- Required: no
+- Default: SNAPSHOT
+- Values: [SNAPSHOT | M | RC | RELEASE]
+- Description: Adds version suffix to the artifact.
+
+**initialVersion**
+
+- Required: no
+- Default: 1.0.0
+- Description: Used to set up a new project.
+
+**applyVersion**
+
+- Required: no
+- Type: Boolean
+- Default: true
+- Description: Apply the generated version to gradle project and sub-projects.
+
+#### Overview and usage
+
+**Setting up a new project:**
+
+```kotlin
+versionConfig {
+    versionIncrementer = "minor"
+    tagSuffix = "SNAPSHOT"
+    initialVersion = "1.0.0"
+}
+val scm by tasks.registering(ScmVersion::class)
+
+group = "com.mulecode"
+version = scm.get().nextVersion
+```
+
+Having the above configuration set, after executing the command:
+
+```shell script
+gradle scmVersion
+```
+
+Output:
+```shell script
+Project successfully initialised
+Tags Created:
+- 'latest'
+- '1.0.0.BUILD-SNAPSHOT'
+
+[ACTION] Push the tags to remote branch with command:
+'scmVersionPush'
+```
+The command will create two tags:
+- latest: tell the plugin which commit is the latest versioned.
+- version: the current version of the commit.
+
+For the second commit after the project already set.
+The next configuration could be:
+
+```kotlin
+versionConfig {
+    versionIncrementer = "minor"
+    tagSuffix = "M"
+}
+```
+the above configuration will output:
+```shell script
+1.0.0.M1
+```
+
+any others sub sequent commits preserving the `M` that 
+stands for `MILESTONE`, the version sequencer will be increased:
+
+e.g:
+```shell script
+1.0.0.M1 -> 1.0.0.M2 -> 1.0.0.M3
+```
+
