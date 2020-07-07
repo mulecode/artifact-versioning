@@ -154,4 +154,20 @@ public class VersionParserTest {
     assertThat(parse.toString(), is(expected));
   }
 
+  @Test
+  public void shouldIncrementPatchFromNumbersOnly() {
+
+    var version = "1.2.3";
+    var expected = "1.2.4.RELEASE";
+
+    Version parse = VersionParser.parse(version);
+    parse.incrementPatch();
+
+    assertThat(parse.getMajor(), is(1));
+    assertThat(parse.getMinor(), is(2));
+    assertThat(parse.getPatch(), is(4));
+    assertThat(parse.getTagType(), is(Tag.RELEASE));
+    assertThat(parse.getSeq(), is(1));
+    assertThat(parse.toString(), is(expected));
+  }
 }

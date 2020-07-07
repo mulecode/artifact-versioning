@@ -7,6 +7,9 @@ import java.util.Objects;
 @Slf4j
 public final class VersionComparator {
 
+  private VersionComparator() {
+  }
+
   public static int compareTo(Version one, Version two) {
 
     if (Objects.isNull(two)) {

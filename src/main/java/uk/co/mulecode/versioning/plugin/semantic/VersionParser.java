@@ -6,11 +6,14 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class VersionParser {
+public final class VersionParser {
+
+  private VersionParser() {
+  }
 
   public static Version parse(String value) {
 
-    if (!isSemanticVersion(value)) {
+    if (!isSemanticVersion(value) && !isValidVersionNumber(value)) {
       throw new IllegalArgumentException(
           "[ERROR] Value " + value + " is not a valid semantic version."
       );
@@ -20,7 +23,7 @@ public class VersionParser {
         .map(VersionParser::parseVersionNumber)
         .orElseThrow();
 
-    var suffix = extractSuffix(value).orElseThrow();
+    var suffix = extractSuffix(value).orElse(Tag.RELEASE.getOutputName());
     var tag = extractTagFromSuffix(suffix).orElseThrow();
     var seq = extractTagSeqFromSuffix(suffix).orElse(1);
 
@@ -49,7 +52,7 @@ public class VersionParser {
     return Tag.valueOfName(value);
   }
 
-  public static Boolean isSemanticVersion(String value) {
+  public static boolean isSemanticVersion(String value) {
     String regex = "((v)?(\\d+)(\\.)(\\d+)(\\.)(\\d+)([.]+)(M\\d+|RC\\d+|BUILD-SNAPSHOT|RELEASE))";
     Pattern pattern = Pattern.compile(regex);
     Matcher matcher = pattern.matcher(value);
@@ -71,14 +74,14 @@ public class VersionParser {
     return extractor(regex, value).map(Tag::valueOfName);
   }
 
-  public static Boolean isValidVersionNumber(String value) {
+  public static boolean isValidVersionNumber(String value) {
     var regex = "((\\d+)(\\.)(\\d+)(\\.)(\\d+))";
     Pattern pattern = Pattern.compile(regex);
     Matcher matcher = pattern.matcher(value);
     return matcher.find();
   }
 
-  public static Boolean isTagSeq(String value) {
+  public static boolean isTagSeq(String value) {
     var regex = "(\\d+)";
     Pattern pattern = Pattern.compile(regex);
     Matcher matcher = pattern.matcher(value);

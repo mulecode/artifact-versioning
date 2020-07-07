@@ -46,8 +46,22 @@ version = file("build/versioning/next.txt").readText()
 
 - Required: no
 - Default: patch
-- Values: [patch | minor | major]
+- Values: [patch | minor | major | skip]
 - Description: Tells the plugin how the semantic version should be updated.
+
+```
+- patch
+Version when you make backwards compatible bug fixes
+
+- minor 
+Version when you add functionality in a backwards compatible manner
+
+- patch
+Version when you make incompatible API changes
+
+- skip
+Skip versioning plugin during ci pipeline
+```
 
 **tagSuffix**
 
@@ -55,6 +69,25 @@ version = file("build/versioning/next.txt").readText()
 - Default: SNAPSHOT
 - Values: [SNAPSHOT | M | RC | RELEASE]
 - Description: Adds version suffix to the artifact.
+
+```
+- SNAPSHOT
+Snapshot is the early build of one or a set of features. 
+considerable unstable for changing the binary for each build. 
+is only recommended for early system integration.  
+
+- M (MILESTONE)
+Milestone versions include specific sets of functions and are released as 
+soon as the functionality is complete.
+
+- RC (RELEASE_CANDIDATE)
+Is a beta version with potential to be a final product, 
+which is ready to release unless significant bugs emerge.
+
+- RELEASE
+Is the final product of a set of features. Considerable stable and readu 
+for production. Still a small possibility of bugs.
+```
 
 **initialVersion**
 
@@ -79,30 +112,24 @@ versionConfig {
     tagSuffix = "SNAPSHOT"
     initialVersion = "1.0.0"
 }
-val scm by tasks.registering(ScmVersion::class)
-
-group = "com.mulecode"
-version = scm.get().nextVersion
 ```
 
 Having the above configuration set, after executing the command:
 
 ```shell script
-gradle scmVersion
+gradle clean scmVersion build
 ```
 
 Output:
 ```shell script
 Project successfully initialised
 Tags Created:
-- 'latest'
 - '1.0.0.BUILD-SNAPSHOT'
 
 [ACTION] Push the tags to remote branch with command:
 'scmVersionPush'
 ```
 The command will create two tags:
-- latest: tell the plugin which commit is the latest versioned.
 - version: the current version of the commit.
 
 For the second commit after the project already set.
@@ -127,3 +154,16 @@ e.g:
 1.0.0.M1 -> 1.0.0.M2 -> 1.0.0.M3
 ```
 
+### Tag sequence example
+
+```
+1.0.0.BUILD-SNAPSHOT
+->
+1.0.0.M1
+->
+1.0.0.M2
+->
+1.0.0.RC1
+->
+1.0.0.RELEASE
+```
