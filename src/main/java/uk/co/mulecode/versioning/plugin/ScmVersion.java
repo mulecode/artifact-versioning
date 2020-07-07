@@ -102,8 +102,9 @@ public class ScmVersion extends DefaultTask {
 
     if (gitRepository.isTagInHeadCommit(currentVersion.toTagString())) {
       log.warn(
-          "[ATTENTION] Tag 'latest' already on HEAD commit. \n" +
-              "-> Task will resume."
+          "[ATTENTION] Tag '{}' already on HEAD commit. \n" +
+              "-> Task will resume.",
+          currentVersion.toString()
       );
       outputNextVersion(currentVersion.toString());
       return;

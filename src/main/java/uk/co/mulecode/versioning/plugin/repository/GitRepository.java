@@ -120,6 +120,7 @@ public class GitRepository {
       Ref tagRef = git.tag()
           .setName(name)
           .setAnnotated(true)
+          .setForceUpdate(true)
           .call();
       log.info("tag: {}", tagRef);
 
@@ -144,6 +145,7 @@ public class GitRepository {
     try {
 
       PushCommand pushCommand1 = git.push()
+          .setForce(true)
           .setPushTags();
 
       pushCommand1.call();
