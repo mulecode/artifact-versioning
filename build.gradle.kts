@@ -9,7 +9,8 @@ plugins {
 }
 
 group = "uk.co.mulecode"
-version = "1.0.2.RELEASE"
+version = "1.0.1.R1"
+//version = "1.0.1.BUILD-SNAPSHOT"
 
 repositories {
     mavenCentral()
@@ -24,7 +25,7 @@ dependencies {
     implementation("org.slf4j:slf4j-simple:1.7.30")
 
     implementation("org.apache.maven:maven-artifact:3.6.3")
-    implementation("org.eclipse.jgit:org.eclipse.jgit:5.7.0.202003110725-r")
+    implementation("org.eclipse.jgit:org.eclipse.jgit:5.8.0.202006091008-r")
     implementation("org.apache.commons:commons-collections4:4.0")
     implementation("org.apache.commons:commons-lang3:3.9")
     implementation("org.json:json:20180813")

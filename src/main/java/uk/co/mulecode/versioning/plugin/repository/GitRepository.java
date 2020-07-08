@@ -2,7 +2,6 @@ package uk.co.mulecode.versioning.plugin.repository;
 
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.PushCommand;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
@@ -11,6 +10,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryBuilder;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import uk.co.mulecode.versioning.plugin.service.ShellService;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,9 +27,11 @@ public class GitRepository {
   private static final String REFS_TAGS_PREFIX = "refs/tags/";
   private static final UnaryOperator<String> stripPrefix = s -> s.replace(REFS_TAGS_PREFIX, "");
   private final String basePath;
+  private final ShellService shellService;
 
-  public GitRepository(String basePath) {
+  public GitRepository(String basePath, ShellService shellService) {
     this.basePath = basePath;
+    this.shellService = shellService;
   }
 
   private Repository getRepository() {
@@ -140,18 +142,10 @@ public class GitRepository {
   }
 
   public void pushTags() {
-    var repo = getRepository();
-    var git = new Git(repo);
     try {
-
-      PushCommand pushCommand1 = git.push()
-          .setForce(true)
-          .setPushTags();
-
-      pushCommand1.call();
-
-    } catch (GitAPIException e) {
-      throw new RuntimeException(e);
+      shellService.run("git push --tags");
+    } catch (Exception e) {
+      throw new IllegalStateException("could not push tag" + e.getMessage(), e);
     }
   }
 

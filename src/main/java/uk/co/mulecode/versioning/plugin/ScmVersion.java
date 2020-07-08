@@ -11,6 +11,7 @@ import uk.co.mulecode.versioning.plugin.semantic.Version;
 import uk.co.mulecode.versioning.plugin.semantic.VersionParser;
 import uk.co.mulecode.versioning.plugin.service.EnumParserService;
 import uk.co.mulecode.versioning.plugin.service.OutVersionFileService;
+import uk.co.mulecode.versioning.plugin.service.ShellService;
 import uk.co.mulecode.versioning.plugin.service.VersionService;
 
 import java.io.File;
@@ -22,7 +23,8 @@ public class ScmVersion extends DefaultTask {
 
   public static final String OUTPUT_DIR_NAME = "/versioning";
 
-  private final GitRepository gitRepository = new GitRepository(getProject().getProjectDir().getPath());
+  private final ShellService shellService = new ShellService();
+  private final GitRepository gitRepository = new GitRepository(getProject().getProjectDir().getPath(), shellService);
   private final EnumParserService enumParserService = new EnumParserService();
   private final VersionService versionService = new VersionService(gitRepository);
   private final OutVersionFileService outVersionFileService = new OutVersionFileService();
