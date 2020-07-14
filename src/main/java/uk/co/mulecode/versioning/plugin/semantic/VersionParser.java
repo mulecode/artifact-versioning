@@ -48,10 +48,6 @@ public final class VersionParser {
         .build();
   }
 
-  public static Tag parseTag(String value) {
-    return Tag.valueOfName(value);
-  }
-
   public static boolean isSemanticVersion(String value) {
     String regex = "((v)?(\\d+)(\\.)(\\d+)(\\.)(\\d+)([.]+)(M\\d+|RC\\d+|BUILD-SNAPSHOT|RELEASE))";
     Pattern pattern = Pattern.compile(regex);

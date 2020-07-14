@@ -9,7 +9,7 @@ plugins {
 }
 
 group = "uk.co.mulecode"
-version = "1.0.1.R1"
+version = "1.0.1.R2"
 //version = "1.0.1.BUILD-SNAPSHOT"
 
 repositories {
@@ -35,6 +35,8 @@ dependencies {
     testImplementation("junit", "junit", "4.12")
     testImplementation("org.hamcrest:hamcrest-all:1.3")
     testImplementation("com.jayway.jsonpath:json-path-assert:2.4.0")
+    testImplementation("org.mockito:mockito-core:3.3.3")
+    testImplementation("org.assertj:assertj-core:3.16.1")
 }
 
 configure<JavaPluginConvention> {

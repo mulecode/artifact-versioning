@@ -78,40 +78,39 @@ public class VersionService {
 
     Version nextVersion = currentVersion.duplicate();
 
-    // FROM ( SNAPSHOT, M, RC ) TO ..., THEN KEEP VERSION
-    if (isSnapShot.or(isMilestone).or(isRC).test(currentVersion.getTagType())) {
-
-      // FROM SNAPSHOT to SNAPSHOT, THEN KEEP VERSION
+    if (isSnapShot.test(currentVersion.getTagType())) {
       if (isSnapShot.test(nextTagSuffixEnum)) {
-        gitRepository.tagDelete(currentVersion.toString());
-      }
-
-      //KEEP VERSION
-      if (isRelease.test(nextTagSuffixEnum)) {
+        gitRepository.tagDelete(currentVersion.toTagString());
+      } else {
         nextVersion.setTagType(nextTagSuffixEnum);
-      }
-
-      //KEEP VERSION , TOP UP END
-      if (isMilestone.or(isRC).test(currentVersion.getTagType())) {
-
-        if (currentVersion.getTagType().equals(nextTagSuffixEnum)) {
-          nextVersion.incrementSeq();
-        } else {
-          nextVersion.setTagType(nextTagSuffixEnum);
-          nextVersion.resetSeq();
-        }
       }
     }
 
-    // FROM RELEASE TO ANY, THEN TOP UP VERSION AND UPDATE SUFFIX
+    if (isMilestone.test(currentVersion.getTagType())) {
+      if (isMilestone.test(nextTagSuffixEnum)) {
+        nextVersion.incrementSeq();
+      } else {
+        nextVersion.setTagType(nextTagSuffixEnum);
+        nextVersion.resetSeq();
+      }
+    }
+
+    if (isRC.test(currentVersion.getTagType())) {
+      if (isRC.test(nextTagSuffixEnum)) {
+        nextVersion.incrementSeq();
+      } else {
+        nextVersion.setTagType(nextTagSuffixEnum);
+        nextVersion.resetSeq();
+      }
+    }
+
     if (isRelease.test(currentVersion.getTagType())) {
       nextVersion.setTagType(nextTagSuffixEnum);
+      nextVersion.resetSeq();
       nextVersion.increment(incrementerEnum);
     }
 
-    if (isMilestone.or(isRC).or(isRelease).test(currentVersion.getTagType())) {
-      gitRepository.tag(nextVersion.toTagString());
-    }
+    gitRepository.tag(nextVersion.toTagString());
 
     return nextVersion;
   }
