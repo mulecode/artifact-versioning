@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
@@ -32,54 +31,6 @@ public class GitRepository {
   public GitRepository(String basePath, ShellService shellService) {
     this.basePath = basePath;
     this.shellService = shellService;
-  }
-
-  private Repository getRepository() {
-
-    var gitPath = String.format("%s/.git", basePath);
-    var gitDir = new File(gitPath);
-
-    if (!gitDir.exists()) {
-      throw new IllegalStateException("Provided git path does not exists: " + basePath);
-    }
-    try {
-      return new RepositoryBuilder()
-          .setMustExist(true)
-          .setGitDir(gitDir)
-          .readEnvironment()
-          .build();
-    } catch (Exception e) {
-      throw new IllegalStateException("Could not initiate git repository", e);
-    }
-  }
-
-  public Boolean isTagExists(String tagName) {
-    var repo = getRepository();
-
-    try {
-
-      ObjectId tagId = repo.resolve(REFS_TAGS_PREFIX + tagName);
-
-      return Objects.nonNull(tagId);
-
-    } catch (Exception e) {
-      throw new IllegalStateException("could not locate tag existence", e);
-    }
-  }
-
-  public Set<String> getLatestVersionTag(ObjectId tagId) {
-
-    log.info("getLatestVersionTag: {}", tagId);
-    var repo = getRepository();
-
-    try (RevWalk walk = new RevWalk(repo)) {
-
-      RevCommit commit = walk.parseCommit(tagId);
-      return getTagsForCommit(commit);
-
-    } catch (Exception e) {
-      throw new IllegalStateException("could not execute getLatestVersionTag", e);
-    }
   }
 
   public RevCommit getHeadCommit() {
@@ -149,6 +100,37 @@ public class GitRepository {
     }
   }
 
+  public boolean isTagInHeadCommit(String tagValue) {
+    RevCommit headCommit = getHeadCommit();
+    Set<String> tagsForCommit = getTagsForCommit(headCommit);
+
+    log.info("tags found for commit: {}", headCommit);
+    boolean anyMatch = tagsForCommit.stream()
+        .anyMatch(s -> s.equals(tagValue));
+    log.info("{} tag is HEAD: {}", tagValue, anyMatch);
+
+    return anyMatch;
+  }
+
+  private Repository getRepository() {
+
+    var gitPath = String.format("%s/.git", basePath);
+    var gitDir = new File(gitPath);
+
+    if (!gitDir.exists()) {
+      throw new IllegalStateException("Provided git path does not exists: " + basePath);
+    }
+    try {
+      return new RepositoryBuilder()
+          .setMustExist(true)
+          .setGitDir(gitDir)
+          .readEnvironment()
+          .build();
+    } catch (Exception e) {
+      throw new IllegalStateException("Could not initiate git repository", e);
+    }
+  }
+
   private Set<String> getTagsForCommit(RevCommit latestCommit) {
 
     var repo = getRepository();
@@ -179,18 +161,5 @@ public class GitRepository {
     } catch (Exception e) {
       throw new IllegalStateException("could not execute getTagsForCommit" + e.getMessage(), e);
     }
-  }
-
-  public Boolean isTagInHeadCommit(String tagValue) {
-    RevCommit headCommit = getHeadCommit();
-    Set<String> tagsForCommit = getTagsForCommit(headCommit);
-
-    log.info("tags found for commit: {}", headCommit);
-    boolean anyMatch = tagsForCommit.stream()
-        .peek(log::info)
-        .anyMatch(s -> s.equals(tagValue));
-    log.info("{} tag is HEAD: {}", tagValue, anyMatch);
-
-    return anyMatch;
   }
 }

@@ -12,32 +12,21 @@ import static uk.co.mulecode.versioning.plugin.semantic.VersionParser.parse;
 public class VersionComparatorTest {
 
   @Test
-  public void shouldReturnLatestTag() {
+  public void shouldCompare_case1() {
 
     var compare = compareTo(
-        parse("1.2.3.RELEASE"),
-        parse("1.2.3.RELEASE")
+        parse("1.2.3.BUILD-SNAPSHOT"),
+        parse("1.2.3.BUILD-SNAPSHOT")
     );
 
     assertThat(compare, is(0));
   }
 
   @Test
-  public void shouldReturnLatestTag2() {
+  public void shouldCompare_case2() {
 
     var compare = compareTo(
-        parse("1.2.3.BUILD-SNAPSHOT"),
-        parse("1.2.3.RELEASE")
-    );
-
-    assertThat(compare, is(-1));
-  }
-
-  @Test
-  public void shouldReturnLatestTag3() {
-
-    var compare = compareTo(
-        parse("1.2.3.RELEASE"),
+        parse("1.2.4.BUILD-SNAPSHOT"),
         parse("1.2.3.BUILD-SNAPSHOT")
     );
 
@@ -45,178 +34,222 @@ public class VersionComparatorTest {
   }
 
   @Test
-  public void shouldReturnLatestTag4() {
+  public void shouldCompare_case3() {
 
     var compare = compareTo(
-        parse("1.2.3.M5"),
-        parse("1.2.3.RC1")
+        parse("1.2.3.BUILD-SNAPSHOT"),
+        parse("1.2.4.BUILD-SNAPSHOT")
     );
 
     assertThat(compare, is(-1));
   }
 
   @Test
-  public void shouldReturnLatestTag5() {
+  public void shouldCompare_case4() {
 
     var compare = compareTo(
-        parse("1.2.3.RC1"),
-        parse("1.2.3.RC5")
-    );
-
-    assertThat(compare, is(-1));
-  }
-
-  @Test
-  public void shouldReturnLatestTag6() {
-
-    var compare = compareTo(
-        parse("1.2.3.M6"),
-        parse("1.2.3.M5")
+        parse("1.3.3.BUILD-SNAPSHOT"),
+        parse("1.2.4.BUILD-SNAPSHOT")
     );
 
     assertThat(compare, is(1));
   }
 
   @Test
-  public void shouldReturnLatestTag7() {
+  public void shouldCompare_case5() {
 
     var compare = compareTo(
-        parse("1.2.3.M6"),
-        parse("1.2.3.M6")
+        parse("1.3.3.BUILD-SNAPSHOT"),
+        parse("1.3.4.BUILD-SNAPSHOT")
+    );
+
+    assertThat(compare, is(-1));
+  }
+
+  @Test
+  public void shouldCompare_case6() {
+
+    var compare = compareTo(
+        parse("2.3.3.BUILD-SNAPSHOT"),
+        parse("1.3.4.BUILD-SNAPSHOT")
+    );
+
+    assertThat(compare, is(1));
+  }
+
+  @Test
+  public void shouldCompare_case7() {
+
+    var compare = compareTo(
+        parse("2.3.3.BUILD-SNAPSHOT"),
+        parse("3.3.4.BUILD-SNAPSHOT")
+    );
+
+    assertThat(compare, is(-1));
+  }
+
+  @Test
+  public void shouldCompare_case8() {
+
+    var compare = compareTo(
+        parse("1.0.1.M1"),
+        parse("1.0.0.BUILD-SNAPSHOT")
+    );
+
+    assertThat(compare, is(1));
+  }
+
+  @Test
+  public void shouldCompare_case9() {
+
+    var compare = compareTo(
+        parse("1.0.1.M1"),
+        parse("1.1.0.BUILD-SNAPSHOT")
+    );
+
+    assertThat(compare, is(-1));
+  }
+
+  @Test
+  public void shouldCompare_case10() {
+
+    var compare = compareTo(
+        parse("1.1.0.M1"),
+        parse("1.1.0.M1")
     );
 
     assertThat(compare, is(0));
   }
 
   @Test
-  public void shouldReturnLatestNumbers() {
+  public void shouldCompare_case11() {
 
     var compare = compareTo(
-        parse("1.2.3.RELEASE"),
-        parse("1.2.3.RELEASE")
+        parse("1.2.0.M1"),
+        parse("1.1.0.M1")
+    );
+
+    assertThat(compare, is(1));
+  }
+
+  @Test
+  public void shouldCompare_case12() {
+
+    var compare = compareTo(
+        parse("1.2.0.M1"),
+        parse("1.1.0.M2")
+    );
+
+    assertThat(compare, is(1));
+  }
+
+  @Test
+  public void shouldCompare_case13() {
+
+    var compare = compareTo(
+        parse("1.2.0.M3"),
+        parse("1.3.0.M2")
+    );
+
+    assertThat(compare, is(-1));
+  }
+
+  @Test
+  public void shouldCompare_case14() {
+
+    var compare = compareTo(
+        parse("1.3.0.M3"),
+        parse("1.3.0.M2")
+    );
+
+    assertThat(compare, is(1));
+  }
+
+  @Test
+  public void shouldCompare_case15() {
+
+    var compare = compareTo(
+        parse("1.3.0.M3"),
+        parse("1.3.0.M4")
+    );
+
+    assertThat(compare, is(-1));
+  }
+
+  @Test
+  public void shouldCompare_case16() {
+
+    var compare = compareTo(
+        parse("1.3.0.RC1"),
+        parse("1.3.0.M3")
+    );
+
+    assertThat(compare, is(1));
+  }
+
+  @Test
+  public void shouldCompare_case17() {
+
+    var compare = compareTo(
+        parse("1.3.0.RC1"),
+        parse("1.3.0.RC2")
+    );
+
+    assertThat(compare, is(-1));
+  }
+
+  @Test
+  public void shouldCompare_case18() {
+
+    var compare = compareTo(
+        parse("1.4.0.RC1"),
+        parse("1.3.0.RC2")
+    );
+
+    assertThat(compare, is(1));
+  }
+
+  @Test
+  public void shouldCompare_case19() {
+
+    var compare = compareTo(
+        parse("1.4.0.RC2"),
+        parse("1.4.0.RC2")
     );
 
     assertThat(compare, is(0));
   }
 
   @Test
-  public void shouldReturnLatestNumbers1() {
+  public void shouldCompare_case20() {
 
     var compare = compareTo(
-        parse("1.2.4.RELEASE"),
-        parse("1.2.3.RELEASE")
+        parse("1.4.0.RC2"),
+        parse("1.4.0.BUILD-SNAPSHOT")
     );
 
     assertThat(compare, is(1));
   }
 
   @Test
-  public void shouldReturnLatestNumbers2() {
+  public void shouldCompare_case21() {
 
     var compare = compareTo(
-        parse("1.2.3.RELEASE"),
-        parse("1.2.4.RELEASE")
+        parse("1.4.0.RC2"),
+        parse("1.4.0.RELEASE")
     );
 
     assertThat(compare, is(-1));
   }
 
   @Test
-  public void shouldReturnLatestNumbers3() {
+  public void shouldCompare_case22() {
 
     var compare = compareTo(
-        parse("1.4.3.RELEASE"),
-        parse("1.2.4.RELEASE")
+        parse("1.4.0.RELEASE"),
+        parse("1.4.0.RELEASE")
     );
 
-    assertThat(compare, is(1));
-  }
-
-  @Test
-  public void shouldReturnLatestNumbers4() {
-
-    var compare = compareTo(
-        parse("1.4.3.RELEASE"),
-        parse("1.4.4.RELEASE")
-    );
-
-    assertThat(compare, is(-1));
-  }
-
-  @Test
-  public void shouldReturnLatestNumbers5() {
-
-    var compare = compareTo(
-        parse("2.4.3.RELEASE"),
-        parse("1.4.4.RELEASE")
-    );
-
-    assertThat(compare, is(1));
-  }
-
-  @Test
-  public void shouldReturnLatestNumbers6() {
-
-    var compare = compareTo(
-        parse("2.4.3.RELEASE"),
-        parse("2.4.4.RELEASE")
-    );
-
-    assertThat(compare, is(-1));
-  }
-
-  @Test
-  public void shouldReturnLatestBoth() {
-
-    var compare = compareTo(
-        parse("2.5.1.RELEASE"),
-        parse("1.3.4.RC4")
-    );
-
-    assertThat(compare, is(1));
-  }
-
-  @Test
-  public void shouldReturnLatestBoth1() {
-
-    var compare = compareTo(
-        parse("2.5.1.RC4"),
-        parse("1.3.4.RELEASE")
-    );
-
-    assertThat(compare, is(-1));
-  }
-
-  @Test
-  public void shouldReturnLatestBoth2() {
-
-    var compare = compareTo(
-        parse("2.5.1.RC4"),
-        parse("1.3.4.RC5")
-    );
-
-    assertThat(compare, is(1));
-  }
-
-  @Test
-  public void shouldReturnLatestBoth3() {
-
-    var compare = compareTo(
-        parse("2.5.1.RC4"),
-        parse("3.3.4.RC1")
-    );
-
-    assertThat(compare, is(-1));
-  }
-
-  @Test
-  public void shouldReturnLatestBoth4() {
-
-    var compare = compareTo(
-        parse("2.5.1.RC1"),
-        parse("3.3.4.RC1")
-    );
-
-    assertThat(compare, is(-1));
+    assertThat(compare, is(0));
   }
 }

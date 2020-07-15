@@ -26,7 +26,7 @@ public class OutVersionFileService {
     return "";
   }
 
-  public void write(Project project, Path versioningFolderOut, String version, Boolean applyVersion) {
+  public void write(Project project, Path versioningFolderOut, String version, boolean applyVersion) {
 
     try {
       var filePath = versioningFolderOut.resolve(VERSION_OUT_FILENAME);

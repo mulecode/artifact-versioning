@@ -24,9 +24,7 @@ public class VersionPlugin implements Plugin<Project> {
     target.getTasks().register(
         TASK_NAME_PUSH,
         ScmVersionPush.class,
-        task -> {
-          task.setGroup(GROUP);
-        }
+        task -> task.setGroup(GROUP)
     );
 
     target.getTasks().register(

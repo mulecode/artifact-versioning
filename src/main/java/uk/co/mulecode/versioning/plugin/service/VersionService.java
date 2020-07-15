@@ -18,10 +18,10 @@ import static uk.co.mulecode.versioning.plugin.semantic.VersionParser.parseVersi
 @RequiredArgsConstructor
 public class VersionService {
 
-  private final static Predicate<Tag> isSnapShot = s -> s.equals(Tag.SNAPSHOT);
-  private final static Predicate<Tag> isMilestone = s -> s.equals(Tag.MILESTONE);
-  private final static Predicate<Tag> isRC = s -> s.equals(Tag.RELEASE_CANDIDATE);
-  private final static Predicate<Tag> isRelease = s -> s.equals(Tag.RELEASE);
+  private static final Predicate<Tag> isSnapShot = s -> s.equals(Tag.SNAPSHOT);
+  private static final Predicate<Tag> isMilestone = s -> s.equals(Tag.MILESTONE);
+  private static final Predicate<Tag> isRC = s -> s.equals(Tag.RELEASE_CANDIDATE);
+  private static final Predicate<Tag> isRelease = s -> s.equals(Tag.RELEASE);
 
   private final GitRepository gitRepository;
 

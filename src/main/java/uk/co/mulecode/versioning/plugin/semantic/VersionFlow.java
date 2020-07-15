@@ -4,7 +4,10 @@ import lombok.extern.slf4j.Slf4j;
 import uk.co.mulecode.versioning.plugin.model.Tag;
 
 @Slf4j
-public class VersionFlow {
+public final class VersionFlow {
+
+  private VersionFlow() {
+  }
 
   public static boolean isValidVersionFlow(Tag prev, Tag next) {
 

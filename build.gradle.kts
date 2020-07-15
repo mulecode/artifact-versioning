@@ -9,8 +9,7 @@ plugins {
 }
 
 group = "uk.co.mulecode"
-version = "1.0.1.R2"
-//version = "1.0.1.BUILD-SNAPSHOT"
+version = "1.0.1.R3"
 
 repositories {
     mavenCentral()

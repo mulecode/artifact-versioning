@@ -28,32 +28,15 @@ public final class VersionComparator {
     Integer numberCompare = compareNumber(one, two);
     Integer seqCompare = compareSeq(one, two);
 
-    // 1.0.0-RC1 == 1.1.0-RC1
-    if (numberCompare != 0 && tagCompare == 0 && seqCompare == 0) {
+    if (numberCompare != 0) {
       return numberCompare;
     }
 
-    // 1.0.0-RC1 == 1.0.0-RC2
-    if (numberCompare == 0 && tagCompare == 0 && seqCompare != 0) {
-      return seqCompare;
-    }
-
-    // 3.3.4.RC1 == 2.5.1.RC4
-    if (numberCompare != 0 && tagCompare == 0) {
-      return numberCompare;
-    }
-
-    // 3.3.3.RELEASE == 3.3.3.RC1
-    if (numberCompare == 0 && tagCompare != 0) {
+    if (tagCompare != 0) {
       return tagCompare;
     }
 
-    // 3.3.3.RELEASE == 1.0.0.RC1
-    if (numberCompare == 1 && tagCompare == -1) {
-      return -1;
-    }
-
-    return 1;
+    return seqCompare;
   }
 
   private static Integer compareNumber(Version one, Version two) {

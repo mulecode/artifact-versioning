@@ -6,6 +6,7 @@ import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.OutputDirectory;
 import org.gradle.api.tasks.TaskAction;
 import uk.co.mulecode.versioning.plugin.model.Incrementer;
+import uk.co.mulecode.versioning.plugin.model.Tag;
 import uk.co.mulecode.versioning.plugin.repository.GitRepository;
 import uk.co.mulecode.versioning.plugin.semantic.Version;
 import uk.co.mulecode.versioning.plugin.semantic.VersionParser;
@@ -17,6 +18,8 @@ import uk.co.mulecode.versioning.plugin.service.VersionService;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+
+import static uk.co.mulecode.versioning.plugin.model.Incrementer.SKIP;
 
 @Slf4j
 public class ScmVersion extends DefaultTask {
@@ -50,49 +53,22 @@ public class ScmVersion extends DefaultTask {
 
     var nextTagSuffixEnum = enumParserService.validateSuffix(tagSuffix);
     var incrementerEnum = enumParserService.validateIncrementer(versionIncrementer);
-    var tagLatest = gitRepository.getAllTags()
+
+    gitRepository.getAllTags()
         .stream()
         .filter(VersionParser::isValidVersionNumber)
         .map(VersionParser::parse)
-        .max(Version::compareTo);
-
-    //Project not setup
-    if (tagLatest.isEmpty()) {
-      // Skip project setup
-      if (!Incrementer.SKIP.equals(incrementerEnum)) {
-
-        var initialVersionNext = versionService.setupNewVersioning(
-            initialVersion,
-            nextTagSuffixEnum
+        .max(Version::compareTo)
+        .ifPresentOrElse(
+            currentVersion -> nextVersion(nextTagSuffixEnum, incrementerEnum, currentVersion),
+            () -> setupNewVersion(nextTagSuffixEnum, incrementerEnum)
         );
+  }
 
-        outputNextVersion(initialVersionNext.toString());
-
-        log.warn(
-            "Project successfully initialised\n" +
-                "Tags Created:\n" +
-                "- '{}'", initialVersionNext
-        );
-
-        logAdviceToPush();
-
-      } else {
-
-        log.warn(
-            "Project is not setup and versionIncrementer set to 'SKIP'\n" +
-                "Task will resume.\n" +
-                "No version will be generated"
-        );
-
-      }
-      return;
-    }
-
-    Version currentVersion = tagLatest.orElseThrow();
-
+  private void nextVersion(Tag nextTagSuffixEnum, Incrementer incrementerEnum, Version currentVersion) {
     log.warn(" Current version: {}", currentVersion);
 
-    if (Incrementer.SKIP.equals(incrementerEnum)) {
+    if (SKIP.equals(incrementerEnum)) {
       log.warn(
           "versionIncrementer 'SKIP' detected.\n" +
               "Task will resume.\n" +
@@ -119,6 +95,33 @@ public class ScmVersion extends DefaultTask {
     );
 
     outputNextVersion(nextVersion.toString());
+    logAdviceToPush();
+  }
+
+  private void setupNewVersion(Tag nextTagSuffixEnum, Incrementer incrementer) {
+
+    if (SKIP.equals(incrementer)) {
+      log.warn(
+          "Project is not setup and versionIncrementer set to 'SKIP'\n" +
+              "Task will resume.\n" +
+              "No version will be generated"
+      );
+      return;
+    }
+
+    var initialVersionNext = versionService.setupNewVersioning(
+        initialVersion,
+        nextTagSuffixEnum
+    );
+
+    outputNextVersion(initialVersionNext.toString());
+
+    log.warn(
+        "Project successfully initialised\n" +
+            "Tags Created:\n" +
+            "- '{}'", initialVersionNext
+    );
+
     logAdviceToPush();
   }
 
