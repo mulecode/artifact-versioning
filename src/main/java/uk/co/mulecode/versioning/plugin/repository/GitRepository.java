@@ -83,18 +83,16 @@ public class GitRepository {
   }
 
   public void tagDelete(final String name) {
-    var repo = getRepository();
-    var git = new Git(repo);
     try {
-      git.tagDelete().setTags(name).call();
-    } catch (GitAPIException e) {
+      shellService.run(String.format("git tag -d %s", name));
+    } catch (Exception e) {
       throw new IllegalStateException("could not delete tag", e);
     }
   }
 
   public void pushTags() {
     try {
-      shellService.run("git push --tags");
+      shellService.run("git push -f --tags");
     } catch (Exception e) {
       throw new IllegalStateException("could not push tag" + e.getMessage(), e);
     }
