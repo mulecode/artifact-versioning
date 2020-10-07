@@ -1,7 +1,6 @@
 plugins {
     id("java")
     id("idea")
-    id("maven")
     id("maven-publish")
     id("java-gradle-plugin")
     id("com.gradle.plugin-publish") version "0.12.0"
@@ -9,7 +8,7 @@ plugins {
 }
 
 group = "uk.co.mulecode"
-version = "1.0.1.R4"
+version = "1.0.1.R5"
 
 repositories {
     mavenCentral()
@@ -36,6 +35,11 @@ dependencies {
     testImplementation("com.jayway.jsonpath:json-path-assert:2.4.0")
     testImplementation("org.mockito:mockito-core:3.3.3")
     testImplementation("org.assertj:assertj-core:3.16.1")
+}
+
+tasks.wrapper {
+    gradleVersion = "6.6.1"
+    distributionType = Wrapper.DistributionType.ALL
 }
 
 configure<JavaPluginConvention> {

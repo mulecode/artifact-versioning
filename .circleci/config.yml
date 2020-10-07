@@ -19,17 +19,17 @@ jobs:
           - v1-dependencies-
       - run:
           name: Downloading Gradle depedencies
-          command: gradle dependencies
+          command: ./gradlew dependencies
       - save_cache:
           paths:
           - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle.kts" }}
       - run:
           name: Running Junits Tests
-          command: gradle test
+          command: ./gradlew test
       - run:
           name: Building Java artifact
-          command: gradle clean build
+          command: ./gradlew clean build
   deploy:
     executor: jdk-executor
     steps:
@@ -40,17 +40,17 @@ jobs:
             - v1-dependencies-
       - run:
           name: Downloading Gradle depedencies
-          command: gradle dependencies
+          command: ./gradlew dependencies
       - save_cache:
           paths:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle.kts" }}
       - run:
           name: Building Java artifact
-          command: gradle clean build
+          command: ./gradlew clean build
       - run:
           name: Publishing Plugin to gradle portal
-          command: gradle publishPlugins -Pgradle.publish.key=$GRADLE_KEY -Pgradle.publish.secret=$GRADLE_SECRET
+          command: ./gradlew publishPlugins -Pgradle.publish.key=$GRADLE_KEY -Pgradle.publish.secret=$GRADLE_SECRET
 
 workflows:
   version: 2.1

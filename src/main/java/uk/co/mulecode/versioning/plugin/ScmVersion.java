@@ -40,6 +40,8 @@ public class ScmVersion extends DefaultTask {
   private String initialVersion;
   @Setter
   private Boolean applyVersion;
+  @Setter
+  private Boolean tagLatest;
 
   @OutputDirectory
   public File getVersioningFolderOut() {
@@ -91,7 +93,8 @@ public class ScmVersion extends DefaultTask {
     Version nextVersion = versionService.applyNextVersion(
         nextTagSuffixEnum,
         incrementerEnum,
-        currentVersion
+        currentVersion,
+        tagLatest
     );
 
     outputNextVersion(nextVersion.toString());
@@ -111,7 +114,8 @@ public class ScmVersion extends DefaultTask {
 
     var initialVersionNext = versionService.setupNewVersioning(
         initialVersion,
-        nextTagSuffixEnum
+        nextTagSuffixEnum,
+        tagLatest
     );
 
     outputNextVersion(initialVersionNext.toString());

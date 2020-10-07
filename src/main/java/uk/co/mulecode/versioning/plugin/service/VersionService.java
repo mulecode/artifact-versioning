@@ -22,10 +22,11 @@ public class VersionService {
   private static final Predicate<Tag> isMilestone = s -> s.equals(Tag.MILESTONE);
   private static final Predicate<Tag> isRC = s -> s.equals(Tag.RELEASE_CANDIDATE);
   private static final Predicate<Tag> isRelease = s -> s.equals(Tag.RELEASE);
+  public static final String LATEST = "latest";
 
   private final GitRepository gitRepository;
 
-  public Version setupNewVersioning(String initialVersion, Tag tagSuffix) {
+  public Version setupNewVersioning(String initialVersion, Tag tagSuffix, boolean tagLatest) {
 
     log.warn("[ATTENTION] Tag 'latest' not found. \n" +
         "Task will set up new versioning."
@@ -43,7 +44,7 @@ public class VersionService {
       );
     }
 
-    if (StringUtils.isBlank(initialVersion) && VersionParser.isValidVersionNumber(initialVersion)) {
+    if (StringUtils.isBlank(initialVersion) || !VersionParser.isValidVersionNumber(initialVersion)) {
       throw new IllegalStateException(
           "[ERROR] Project initialisation failed. \n" +
               "Required property 'initialVersion' not found. \n" +
@@ -65,14 +66,26 @@ public class VersionService {
         .patch(versionNumber.getPatch())
         .build();
 
+    var versionTagString = initialVersionNext.toTagString();
+
     if (isMilestone.or(isRC).or(isRelease).test(initialVersionNext.getTagType())) {
-      gitRepository.tag(initialVersionNext.toTagString());
+      gitRepository.tag(versionTagString);
+    }
+
+    if (isSnapShot.test(initialVersionNext.getTagType())) {
+      gitRepository.tagDelete(versionTagString);
+      gitRepository.tag(versionTagString);
+    }
+
+    if (tagLatest) {
+      tagLatest();
     }
 
     return initialVersionNext;
   }
 
-  public Version applyNextVersion(Tag nextTagSuffixEnum, Incrementer incrementerEnum, Version currentVersion) {
+  public Version applyNextVersion(Tag nextTagSuffixEnum, Incrementer incrementerEnum, Version currentVersion,
+                                  boolean tagLatest) {
 
     validateVersionFlow(currentVersion.getTagType(), nextTagSuffixEnum);
 
@@ -112,7 +125,20 @@ public class VersionService {
 
     gitRepository.tag(nextVersion.toTagString());
 
+    if (tagLatest) {
+      tagLatest();
+    }
+
     return nextVersion;
+  }
+
+  private void tagLatest() {
+    try {
+      gitRepository.tagDelete(LATEST);
+      gitRepository.tag(LATEST);
+    } catch (Exception e) {
+      log.error("Failed to tag latest - {}", e.getMessage(), e);
+    }
   }
 
   private void validateVersionFlow(Tag previous, Tag next) {

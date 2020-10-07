@@ -1,19 +1,20 @@
+# Idea
+out/
+.idea/
+
+# Gradle
+.gradle/
+build/
+
 # Compiled class file
 *.class
 
 # Log file
 *.log
 
-#idea
-.idea
-out
-
 # out folders
 .gradle
 build
-gradle
-gradlew
-gradlew.bat
 
 # Package Files #
 *.jar

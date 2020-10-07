@@ -22,6 +22,7 @@ versionConfig {
     tagSuffix = "RELEASE"
     initialVersion = "1.0.0"
     applyVersion = true
+    tagLatest = false
 }
 ```
 If the property `applyVersion` is set to `false`, you might need to set 
@@ -101,6 +102,13 @@ for production. Still a small possibility of bugs.
 - Type: Boolean
 - Default: true
 - Description: Apply the generated version to gradle project and sub-projects.
+
+**tagLatest**
+
+- Required: no
+- Type: Boolean
+- Default: true
+- Description: Will tag `latest` in conjunction with the semantic version.
 
 #### Overview and usage
 

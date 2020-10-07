@@ -11,5 +11,6 @@ public class VersionConfig {
   private String tagSuffix = "SNAPSHOT";
   private String initialVersion = "1.0.0";
   private Boolean applyVersion = true;
+  private Boolean tagLatest = true;
 
 }

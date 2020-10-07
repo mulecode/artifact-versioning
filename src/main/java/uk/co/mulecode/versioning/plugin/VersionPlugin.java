@@ -36,6 +36,7 @@ public class VersionPlugin implements Plugin<Project> {
           task.setInitialVersion(config.getInitialVersion());
           task.setVersionIncrementer(config.getVersionIncrementer());
           task.setApplyVersion(config.getApplyVersion());
+          task.setTagLatest(config.getTagLatest());
         }
     );
 

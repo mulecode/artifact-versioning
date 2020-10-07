@@ -76,15 +76,7 @@ public final class VersionComparator {
 
   private static Integer compareTag(Version one, Version two) {
 
-    if (one.getTagType().getWeight() > two.getTagType().getWeight()) {
-      return 1;
-    }
-
-    if (one.getTagType().getWeight() < two.getTagType().getWeight()) {
-      return -1;
-    }
-
-    return 0;
+    return one.getTagType().getWeight().compareTo(two.getTagType().getWeight());
   }
 
   private static Integer compareSeq(Version one, Version two) {
