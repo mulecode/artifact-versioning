@@ -49,7 +49,7 @@ public final class VersionParser {
   }
 
   public static boolean isSemanticVersion(String value) {
-    String regex = "((v)?(\\d+)(\\.)(\\d+)(\\.)(\\d+)([.]+)(M\\d+|RC\\d+|BUILD-SNAPSHOT|RELEASE))";
+    String regex = "((.)?(\\d+)(\\.)(\\d+)(\\.)(\\d+)([.]+)(M\\d+|RC\\d+|BUILD-SNAPSHOT|RELEASE))";
     Pattern pattern = Pattern.compile(regex);
     Matcher matcher = pattern.matcher(value);
     return matcher.find();

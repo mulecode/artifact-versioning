@@ -98,10 +98,6 @@ public class Version implements Comparable<Version> {
     return append.toString();
   }
 
-  public String toTagString() {
-    return "v" + toString();
-  }
-
   public Version duplicate() {
     return Version.builder()
         .patch(patch)

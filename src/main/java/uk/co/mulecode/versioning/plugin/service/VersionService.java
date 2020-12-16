@@ -66,7 +66,7 @@ public class VersionService {
         .patch(versionNumber.getPatch())
         .build();
 
-    var versionTagString = initialVersionNext.toTagString();
+    var versionTagString = initialVersionNext.toString();
 
     if (isMilestone.or(isRC).or(isRelease).test(initialVersionNext.getTagType())) {
       gitRepository.tag(versionTagString);
@@ -84,7 +84,8 @@ public class VersionService {
     return initialVersionNext;
   }
 
-  public Version applyNextVersion(Tag nextTagSuffixEnum, Incrementer incrementerEnum, Version currentVersion,
+  public Version applyNextVersion(Tag nextTagSuffixEnum, Incrementer incrementerEnum,
+                                  Version currentVersion,
                                   boolean tagLatest) {
 
     validateVersionFlow(currentVersion.getTagType(), nextTagSuffixEnum);
@@ -93,7 +94,7 @@ public class VersionService {
 
     if (isSnapShot.test(currentVersion.getTagType())) {
       if (isSnapShot.test(nextTagSuffixEnum)) {
-        gitRepository.tagDelete(currentVersion.toTagString());
+        gitRepository.tagDelete(currentVersion.toString());
       } else {
         nextVersion.setTagType(nextTagSuffixEnum);
       }
@@ -123,7 +124,7 @@ public class VersionService {
       nextVersion.increment(incrementerEnum);
     }
 
-    gitRepository.tag(nextVersion.toTagString());
+    gitRepository.tag(nextVersion.toString());
 
     if (tagLatest) {
       tagLatest();

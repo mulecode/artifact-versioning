@@ -39,59 +39,59 @@ public class VersionServiceTest {
   @Test
   public void applyNextVersion_snapshotToSnapshot() {
 
-    var currentVersion = parse("v1.0.2.BUILD-SNAPSHOT");
+    var currentVersion = parse("1.0.2.BUILD-SNAPSHOT");
 
     var nextVersion = versionService.applyNextVersion(SNAPSHOT, MINOR, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.0.2.BUILD-SNAPSHOT");
+    assertThat(nextVersion.toString()).isEqualTo("1.0.2.BUILD-SNAPSHOT");
 
-    verify(gitRepository, times(1)).tagDelete(currentVersion.toTagString());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository, times(1)).tagDelete(currentVersion.toString());
+    verify(gitRepository).tag(nextVersion.toString());
   }
 
   @Test
   public void applyNextVersion_snapshotToMilestone() {
 
-    var currentVersion = parse("v1.0.2.BUILD-SNAPSHOT");
+    var currentVersion = parse("1.0.2.BUILD-SNAPSHOT");
 
     var nextVersion = versionService.applyNextVersion(MILESTONE, MINOR, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.0.2.M1");
+    assertThat(nextVersion.toString()).isEqualTo("1.0.2.M1");
 
     verify(gitRepository, never()).tagDelete(any());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tag(nextVersion.toString());
   }
 
   @Test
   public void applyNextVersion_snapshotToRc() {
 
-    var currentVersion = parse("v1.0.2.BUILD-SNAPSHOT");
+    var currentVersion = parse("1.0.2.BUILD-SNAPSHOT");
 
     var nextVersion = versionService.applyNextVersion(RELEASE_CANDIDATE, MINOR, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.0.2.RC1");
+    assertThat(nextVersion.toString()).isEqualTo("1.0.2.RC1");
 
     verify(gitRepository, never()).tagDelete(any());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tag(nextVersion.toString());
   }
 
   @Test
   public void applyNextVersion_snapshotToRelease() {
 
-    var currentVersion = parse("v1.0.2.BUILD-SNAPSHOT");
+    var currentVersion = parse("1.0.2.BUILD-SNAPSHOT");
 
     var nextVersion = versionService.applyNextVersion(RELEASE, MINOR, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.0.2.RELEASE");
+    assertThat(nextVersion.toString()).isEqualTo("1.0.2.RELEASE");
 
     verify(gitRepository, never()).tagDelete(any());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tag(nextVersion.toString());
   }
 
   @Test
   public void applyNextVersion_milestoneToSnapshot_shouldFail() {
 
-    var currentVersion = parse("v1.0.2.M1");
+    var currentVersion = parse("1.0.2.M1");
 
     assertThatThrownBy(() ->
         versionService.applyNextVersion(SNAPSHOT, MINOR, currentVersion, false))
@@ -105,46 +105,46 @@ public class VersionServiceTest {
   @Test
   public void applyNextVersion_milestoneToMilestone() {
 
-    var currentVersion = parse("v1.0.2.M1");
+    var currentVersion = parse("1.0.2.M1");
 
     var nextVersion = versionService.applyNextVersion(MILESTONE, MINOR, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.0.2.M2");
+    assertThat(nextVersion.toString()).isEqualTo("1.0.2.M2");
 
     verify(gitRepository, never()).tagDelete(any());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tag(nextVersion.toString());
   }
 
   @Test
   public void applyNextVersion_milestoneToRc() {
 
-    var currentVersion = parse("v1.0.2.M2");
+    var currentVersion = parse("1.0.2.M2");
 
     var nextVersion = versionService.applyNextVersion(RELEASE_CANDIDATE, MINOR, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.0.2.RC1");
+    assertThat(nextVersion.toString()).isEqualTo("1.0.2.RC1");
 
     verify(gitRepository, never()).tagDelete(any());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tag(nextVersion.toString());
   }
 
   @Test
   public void applyNextVersion_milestoneToRelease() {
 
-    var currentVersion = parse("v1.0.2.M2");
+    var currentVersion = parse("1.0.2.M2");
 
     var nextVersion = versionService.applyNextVersion(RELEASE, MINOR, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.0.2.RELEASE");
+    assertThat(nextVersion.toString()).isEqualTo("1.0.2.RELEASE");
 
     verify(gitRepository, never()).tagDelete(any());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tag(nextVersion.toString());
   }
 
   @Test
   public void applyNextVersion_rcToSnapshot_shouldFail() {
 
-    var currentVersion = parse("v1.0.2.RC3");
+    var currentVersion = parse("1.0.2.RC3");
 
     assertThatThrownBy(() ->
         versionService.applyNextVersion(SNAPSHOT, MINOR, currentVersion, false))
@@ -158,7 +158,7 @@ public class VersionServiceTest {
   @Test
   public void applyNextVersion_rcToMilestone_shouldFail() {
 
-    var currentVersion = parse("v1.0.2.RC3");
+    var currentVersion = parse("1.0.2.RC3");
 
     assertThatThrownBy(() ->
         versionService.applyNextVersion(MILESTONE, MINOR, currentVersion, false))
@@ -172,210 +172,210 @@ public class VersionServiceTest {
   @Test
   public void applyNextVersion_rcToRc() {
 
-    var currentVersion = parse("v1.0.2.RC3");
+    var currentVersion = parse("1.0.2.RC3");
 
     var nextVersion = versionService.applyNextVersion(RELEASE_CANDIDATE, MINOR, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.0.2.RC4");
+    assertThat(nextVersion.toString()).isEqualTo("1.0.2.RC4");
 
     verify(gitRepository, never()).tagDelete(any());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tag(nextVersion.toString());
   }
 
   @Test
   public void applyNextVersion_rcToRelease() {
 
-    var currentVersion = parse("v1.0.2.RC3");
+    var currentVersion = parse("1.0.2.RC3");
 
     var nextVersion = versionService.applyNextVersion(RELEASE, MINOR, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.0.2.RELEASE");
+    assertThat(nextVersion.toString()).isEqualTo("1.0.2.RELEASE");
 
     verify(gitRepository, never()).tagDelete(any());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tag(nextVersion.toString());
   }
 
   @Test
   public void applyNextVersion_releaseToSnapshotPatch() {
 
-    var currentVersion = parse("v1.0.2.RELEASE");
+    var currentVersion = parse("1.0.2.RELEASE");
 
     var nextVersion = versionService.applyNextVersion(SNAPSHOT, PATCH, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.0.3.BUILD-SNAPSHOT");
+    assertThat(nextVersion.toString()).isEqualTo("1.0.3.BUILD-SNAPSHOT");
 
     verify(gitRepository, never()).tagDelete(any());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tag(nextVersion.toString());
   }
 
   @Test
   public void applyNextVersion_releaseToSnapshotMinor() {
 
-    var currentVersion = parse("v1.0.2.RELEASE");
+    var currentVersion = parse("1.0.2.RELEASE");
 
     var nextVersion = versionService.applyNextVersion(SNAPSHOT, MINOR, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.1.0.BUILD-SNAPSHOT");
+    assertThat(nextVersion.toString()).isEqualTo("1.1.0.BUILD-SNAPSHOT");
 
     verify(gitRepository, never()).tagDelete(any());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tag(nextVersion.toString());
   }
 
   @Test
   public void applyNextVersion_releaseToSnapshotMajor() {
 
-    var currentVersion = parse("v1.0.2.RELEASE");
+    var currentVersion = parse("1.0.2.RELEASE");
 
     var nextVersion = versionService.applyNextVersion(SNAPSHOT, MAJOR, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v2.0.0.BUILD-SNAPSHOT");
+    assertThat(nextVersion.toString()).isEqualTo("2.0.0.BUILD-SNAPSHOT");
 
     verify(gitRepository, never()).tagDelete(any());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tag(nextVersion.toString());
   }
 
   @Test
   public void applyNextVersion_releaseToMilestonePatch() {
 
-    var currentVersion = parse("v1.0.2.RELEASE");
+    var currentVersion = parse("1.0.2.RELEASE");
 
     var nextVersion = versionService.applyNextVersion(MILESTONE, PATCH, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.0.3.M1");
+    assertThat(nextVersion.toString()).isEqualTo("1.0.3.M1");
 
     verify(gitRepository, never()).tagDelete(any());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tag(nextVersion.toString());
   }
 
   @Test
   public void applyNextVersion_releaseToMilestoneMinor() {
 
-    var currentVersion = parse("v1.0.2.RELEASE");
+    var currentVersion = parse("1.0.2.RELEASE");
 
     var nextVersion = versionService.applyNextVersion(MILESTONE, MINOR, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.1.0.M1");
+    assertThat(nextVersion.toString()).isEqualTo("1.1.0.M1");
 
     verify(gitRepository, never()).tagDelete(any());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tag(nextVersion.toString());
   }
 
   @Test
   public void applyNextVersion_releaseToMilestoneMajor() {
 
-    var currentVersion = parse("v1.0.2.RELEASE");
+    var currentVersion = parse("1.0.2.RELEASE");
 
     var nextVersion = versionService.applyNextVersion(MILESTONE, MAJOR, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v2.0.0.M1");
+    assertThat(nextVersion.toString()).isEqualTo("2.0.0.M1");
 
     verify(gitRepository, never()).tagDelete(any());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tag(nextVersion.toString());
   }
 
   @Test
   public void applyNextVersion_releaseToRcPatch() {
 
-    var currentVersion = parse("v1.0.2.RELEASE");
+    var currentVersion = parse("1.0.2.RELEASE");
 
     var nextVersion = versionService.applyNextVersion(RELEASE_CANDIDATE, PATCH, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.0.3.RC1");
+    assertThat(nextVersion.toString()).isEqualTo("1.0.3.RC1");
 
     verify(gitRepository, never()).tagDelete(any());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tag(nextVersion.toString());
   }
 
   @Test
   public void applyNextVersion_releaseToRcMinor() {
 
-    var currentVersion = parse("v1.0.2.RELEASE");
+    var currentVersion = parse("1.0.2.RELEASE");
 
     var nextVersion = versionService.applyNextVersion(RELEASE_CANDIDATE, MINOR, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.1.0.RC1");
+    assertThat(nextVersion.toString()).isEqualTo("1.1.0.RC1");
 
     verify(gitRepository, never()).tagDelete(any());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tag(nextVersion.toString());
   }
 
   @Test
   public void applyNextVersion_releaseToRcMajor() {
 
-    var currentVersion = parse("v1.0.2.RELEASE");
+    var currentVersion = parse("1.0.2.RELEASE");
 
     var nextVersion = versionService.applyNextVersion(RELEASE_CANDIDATE, MAJOR, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v2.0.0.RC1");
+    assertThat(nextVersion.toString()).isEqualTo("2.0.0.RC1");
 
     verify(gitRepository, never()).tagDelete(any());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tag(nextVersion.toString());
   }
 
   @Test
   public void applyNextVersion_releaseToReleasePatch() {
 
-    var currentVersion = parse("v1.0.2.RELEASE");
+    var currentVersion = parse("1.0.2.RELEASE");
 
     var nextVersion = versionService.applyNextVersion(RELEASE, PATCH, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.0.3.RELEASE");
+    assertThat(nextVersion.toString()).isEqualTo("1.0.3.RELEASE");
 
     verify(gitRepository, never()).tagDelete(any());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tag(nextVersion.toString());
   }
 
   @Test
   public void applyNextVersion_releaseToReleaseMinor() {
 
-    var currentVersion = parse("v1.0.2.RELEASE");
+    var currentVersion = parse("1.0.2.RELEASE");
 
     var nextVersion = versionService.applyNextVersion(RELEASE, MINOR, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.1.0.RELEASE");
+    assertThat(nextVersion.toString()).isEqualTo("1.1.0.RELEASE");
 
     verify(gitRepository, never()).tagDelete(any());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tag(nextVersion.toString());
   }
 
   @Test
   public void applyNextVersion_releaseToReleaseMajor() {
 
-    var currentVersion = parse("v1.0.2.RELEASE");
+    var currentVersion = parse("1.0.2.RELEASE");
 
     var nextVersion = versionService.applyNextVersion(RELEASE, MAJOR, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v2.0.0.RELEASE");
+    assertThat(nextVersion.toString()).isEqualTo("2.0.0.RELEASE");
 
     verify(gitRepository, never()).tagDelete(any());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tag(nextVersion.toString());
   }
 
   @Test
   public void applyNextVersion_tagLatestFalse() {
 
-    var currentVersion = parse("v1.0.2.BUILD-SNAPSHOT");
+    var currentVersion = parse("1.0.2.BUILD-SNAPSHOT");
 
     var nextVersion = versionService.applyNextVersion(SNAPSHOT, MINOR, currentVersion, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.0.2.BUILD-SNAPSHOT");
+    assertThat(nextVersion.toString()).isEqualTo("1.0.2.BUILD-SNAPSHOT");
 
-    verify(gitRepository, times(1)).tagDelete(currentVersion.toTagString());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository, times(1)).tagDelete(currentVersion.toString());
+    verify(gitRepository).tag(nextVersion.toString());
     verify(gitRepository, never()).tag(LATEST);
   }
 
   @Test
   public void applyNextVersion_tagLatestTrue() {
 
-    var currentVersion = parse("v1.0.2.BUILD-SNAPSHOT");
+    var currentVersion = parse("1.0.2.BUILD-SNAPSHOT");
 
     var nextVersion = versionService.applyNextVersion(SNAPSHOT, MINOR, currentVersion, true);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.0.2.BUILD-SNAPSHOT");
+    assertThat(nextVersion.toString()).isEqualTo("1.0.2.BUILD-SNAPSHOT");
 
-    verify(gitRepository).tagDelete(currentVersion.toTagString());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tagDelete(currentVersion.toString());
+    verify(gitRepository).tag(nextVersion.toString());
     verify(gitRepository).tagDelete(LATEST);
     verify(gitRepository).tag(LATEST);
   }
@@ -383,7 +383,7 @@ public class VersionServiceTest {
   @Test
   public void setupNewVersioning_alreadyInitialised() {
 
-    when(gitRepository.getAllTags()).thenReturn(Set.of("v1.0.0.BUILD-SNAPSHOT"));
+    when(gitRepository.getAllTags()).thenReturn(Set.of("1.0.0.BUILD-SNAPSHOT"));
 
     var initialVersion = "1.0.0";
 
@@ -453,10 +453,10 @@ public class VersionServiceTest {
 
     var nextVersion = versionService.setupNewVersioning(initialVersion, SNAPSHOT, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.0.0.BUILD-SNAPSHOT");
+    assertThat(nextVersion.toString()).isEqualTo("1.0.0.BUILD-SNAPSHOT");
 
-    verify(gitRepository).tagDelete(nextVersion.toTagString());
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tagDelete(nextVersion.toString());
+    verify(gitRepository).tag(nextVersion.toString());
     verify(gitRepository, never()).tagDelete(LATEST);
     verify(gitRepository, never()).tag(LATEST);
   }
@@ -470,9 +470,9 @@ public class VersionServiceTest {
 
     var nextVersion = versionService.setupNewVersioning(initialVersion, RELEASE, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.0.0.RELEASE");
+    assertThat(nextVersion.toString()).isEqualTo("1.0.0.RELEASE");
 
-    verify(gitRepository).tag(nextVersion.toTagString());
+    verify(gitRepository).tag(nextVersion.toString());
     verify(gitRepository, never()).tagDelete(LATEST);
     verify(gitRepository, never()).tag(LATEST);
   }
@@ -486,7 +486,7 @@ public class VersionServiceTest {
 
     var nextVersion = versionService.setupNewVersioning(initialVersion, SNAPSHOT, true);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.0.0.BUILD-SNAPSHOT");
+    assertThat(nextVersion.toString()).isEqualTo("1.0.0.BUILD-SNAPSHOT");
 
     verify(gitRepository).tagDelete(LATEST);
     verify(gitRepository).tag(LATEST);
@@ -501,7 +501,7 @@ public class VersionServiceTest {
 
     var nextVersion = versionService.setupNewVersioning(initialVersion, SNAPSHOT, false);
 
-    assertThat(nextVersion.toTagString()).isEqualTo("v1.0.0.BUILD-SNAPSHOT");
+    assertThat(nextVersion.toString()).isEqualTo("1.0.0.BUILD-SNAPSHOT");
 
     verify(gitRepository, never()).tagDelete(LATEST);
     verify(gitRepository, never()).tag(LATEST);
